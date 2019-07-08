@@ -17,12 +17,9 @@ class UNet(nn.Module):
         self.up3 = up(256, 64)
         self.up4 = up(128, 64)
         self.outc = outconv(64, n_classes)
-        self.sa_conv_1 = self_attention_conv(64)
-        self.sa_conv_2 = self_attention_conv(64)
 
     def forward(self, x):
         x1 = self.inc(x)
-        x1 = self.sa_conv_1(x1)
         x2 = self.down1(x1)
         x3 = self.down2(x2)
         x4 = self.down3(x3)
@@ -31,6 +28,5 @@ class UNet(nn.Module):
         x = self.up2(x, x3)
         x = self.up3(x, x2)
         x = self.up4(x, x1)
-        x = self.sa_conv_2(x)
         x = self.outc(x)
         return x
